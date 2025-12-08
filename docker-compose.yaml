@@ -1,0 +1,101 @@
+version: "3.9"
+
+services:
+  # API GATEWAY (TRAEFIK)
+  traefik:
+    image: traefik:v3.6
+    command:
+      - --api.insecure=true
+      - --providers.docker=true
+      - --entrypoints.web.address=:80
+      - --log.level=INFO
+    ports:
+      - "80:80"
+      - "8080:8080"  
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - app_net
+
+  # BANCO DE DADOS (POSTGRES)
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: vetdb
+      POSTGRES_USER: vetuser
+      POSTGRES_PASSWORD: vetpass
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vetuser -d vetdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - app_net
+
+  # BACKEND (SPRING BOOT)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/vetdb
+      SPRING_DATASOURCE_USERNAME: vetuser
+      SPRING_DATASOURCE_PASSWORD: vetpass
+    labels:
+      - "traefik.enable=true"
+
+      - "traefik.http.routers.backend.rule=PathPrefix(`/api`)"
+      - "traefik.http.routers.backend.entrypoints=web"
+
+      - "traefik.http.middlewares.backend-strip.stripprefix.prefixes=/api"
+      - "traefik.http.routers.backend.middlewares=backend-strip"
+
+      - "traefik.http.services.backend.loadbalancer.server.port=8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - app_net
+
+  # SERVIÇO DE PAGAMENTOS
+  payments:
+    build:
+      context: ./payments
+      dockerfile: Dockerfile
+    labels:
+      - "traefik.enable=true"
+
+      - "traefik.http.routers.payments.rule=PathPrefix(`/payments`)"
+      - "traefik.http.routers.payments.entrypoints=web"
+
+      - "traefik.http.middlewares.payments-strip.stripprefix.prefixes=/payments"
+      - "traefik.http.routers.payments.middlewares=payments-strip"
+
+      - "traefik.http.services.payments.loadbalancer.server.port=8080"
+    networks:
+      - app_net
+
+
+  # FRONTEND
+  frontend:
+    image: nginx:alpine
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.frontend.entrypoints=web"
+      - "traefik.http.services.frontend.loadbalancer.server.port=80"
+    networks:
+      - app_net
+
+# Redes e volumes
+volumes:
+  pgdata:
+
+networks:
+  app_net:
+    driver: bridge
+

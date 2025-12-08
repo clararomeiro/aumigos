@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Hospital Veterinário</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .two-columns {
+            display: flex;
+            gap: 30px;
+        }
+        .col {
+            flex: 1;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Hospital Veterinário</h1>
+</header>
+
+<nav>
+    <button onclick="showTab('home')">Início</button>
+    <button onclick="showTab('tutorTab')">Tutor</button>
+    <button onclick="showTab('realizarPagamento')">Realizar Pagamento</button>
+    <button onclick="showTab('agendarConsulta')">Agendar Consulta</button>
+    <button onclick="showTab('cadastrarVeterinario')">Cadastrar Veterinário</button>
+    <button onclick="showTab('cadastrarTutor')">Cadastrar Tutor</button>
+</nav>
+
+<main>
+    <section id="home" class="tab visible">
+        <h2>Seja bem-vindo(a)!</h2>
+        <p>Escolha uma opção no menu acima.</p>
+    </section>
+
+    <section id="tutorTab" class="tab">
+        <h2>Tutor</h2>
+
+        <div class="two-columns">
+            <div class="col">
+                <h3>Buscar Tutor</h3>
+
+                <label>Nome do tutor:</label>
+                <input type="text" id="buscarTutorNome">
+                <button onclick="buscarTutor()">Buscar</button>
+
+                <div id="buscarTutorResultado"></div>
+
+                <div id="animaisContainer" class="hidden">
+                    <h3>Animais do Tutor</h3>
+
+                    <form id="listaAnimaisForm"></form>
+
+                    <button onclick="deletarAnimaisSelecionados()" style="margin-top:10px">
+                        Deletar Animais Selecionados
+                    </button>
+
+                    <div id="delAnimaisResultado"></div>
+                </div>
+            </div>
+
+            <div class="col hidden" id="cadAnimalContainer">
+                <h3>Cadastrar Animal para este Tutor</h3>
+
+                <label>ID do Tutor (automático):</label>
+                <input type="text" id="aniTutor" readonly>
+
+                <label>Nome:</label>
+                <input type="text" id="aniNome">
+
+                <label>Espécie:</label>
+                <input type="text" id="aniEspecie">
+
+                <button onclick="cadastrarAnimal()">Cadastrar Animal</button>
+                <div id="aniResultado"></div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ================== REALIZAR PAGAMENTO ================== -->
+    <section id="realizarPagamento" class="tab">
+        <h2>Realizar Pagamento</h2>
+
+        <label>Tipo de Pagamento (C/D):</label>
+        <input type="text" id="pagTipo" maxlength="1">
+
+        <label>Valor:</label>
+        <input type="number" id="pagValor" step="0.01">
+
+        <button onclick="realizarPagamento()">Enviar</button>
+        <div id="pagamentoResultado"></div>
+    </section>
+
+    <!-- ================== AGENDAR CONSULTA ================== -->
+    <section id="agendarConsulta" class="tab">
+        <h2>Agendar Consulta</h2>
+
+        <label>ID do Animal:</label>
+        <input type="number" id="consAnimal">
+
+        <label>ID do Veterinário:</label>
+        <input type="text" id="consVet">
+
+        <label>Data (AAAA-MM-DD):</label>
+        <input type="text" id="consData">
+
+        <button onclick="agendarConsulta()">Agendar</button>
+        <div id="consultaResultado"></div>
+    </section>
+
+    <!-- ================== CADASTRAR VETERINÁRIO ================== -->
+    <section id="cadastrarVeterinario" class="tab">
+        <h2>Cadastrar Veterinário</h2>
+
+        <label>Nome:</label>
+        <input type="text" id="vetNome">
+
+        <label>CPF:</label>
+        <input type="text" id="vetCpf">
+
+        <label>Email:</label>
+        <input type="text" id="vetEmail">
+
+        <button onclick="cadastrarVeterinario()">Cadastrar</button>
+        <div id="vetResultado"></div>
+    </section>
+
+    <!-- ================== CADASTRAR TUTOR ================== -->
+    <section id="cadastrarTutor" class="tab">
+        <h2>Cadastrar Tutor</h2>
+
+        <label>Nome:</label>
+        <input type="text" id="tutorNome">
+
+        <label>CPF:</label>
+        <input type="text" id="tutorCpf">
+
+        <label>Endereço:</label>
+        <input type="text" id="tutorEndereco">
+
+        <label>Email:</label>
+        <input type="text" id="tutorEmail">
+
+        <button onclick="cadastrarTutor()">Cadastrar</button>
+        <div id="tutorResultado"></div>
+    </section>
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>

@@ -2,26 +2,26 @@ package com.payments.service;
 
 import com.payments.model.PaymentRequest;
 import com.payments.model.PaymentResponse;
-import com.payments.strategy.*;
+import com.payments.strategy.PaymentStrategy;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 @Service
 public class PaymentService {
+    private final Map<String, PaymentStrategy> strategies;
+
+    public PaymentService(Map<String, PaymentStrategy> strategies) {
+        this.strategies = strategies;
+    }
 
     public PaymentResponse process(PaymentRequest req) {
+        String tipo = req.getTipo().toUpperCase();
 
-        PaymentStrategy strategy;
+        PaymentStrategy strategy = strategies.get(tipo);
 
-        switch (req.getTipo().toUpperCase()) {
-            case "C":
-                strategy = new CreditPaymentStrategy();
-                break;
-            case "D":
-                strategy = new DebitPaymentStrategy();
-                break;
-            default:
-                strategy = new HealthPaymentStrategy();
-                break;
+        if (strategy == null) {
+            throw new IllegalArgumentException("Tipo de pagamento não suportado: " + tipo);
         }
 
         return strategy.process(req.getValor());

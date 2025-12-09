@@ -1,5 +1,7 @@
 package com.vet.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,9 +16,10 @@ public class Pagamento {
     private Long id;
 
     private Float valor;
-    private String tipo; // Credito, Debito, Plano
-    private Long data;   // Timestamp ou data em long conforme UML
+    private String tipo; 
+    private Long data;  
 
     @OneToOne(mappedBy = "pagamento")
+    @JsonIgnore
     private Consulta consulta;
 }

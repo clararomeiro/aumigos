@@ -1,6 +1,9 @@
 package com.vet.model;
 
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,5 +20,6 @@ public class Veterinario {
     private String email;
 
     @OneToMany(mappedBy = "veterinario")
+    @JsonIgnore
     private List<Consulta> consultas;
 }

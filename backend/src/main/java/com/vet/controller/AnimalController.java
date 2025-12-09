@@ -1,6 +1,6 @@
 package com.vet.controller;
 
-import com.vet.service.*;
+import com.vet.service.RegistrosFachada;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -8,15 +8,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/animais")
 public class AnimalController {
 
-    private final AnimalService service;
+private final RegistrosFachada fachada;
 
-    public AnimalController(AnimalService service) {
-        this.service = service;
+    public AnimalController(RegistrosFachada fachada) {
+        this.fachada = fachada;
     }
 
     @PostMapping
     public ResponseEntity<GenericResponse> cadastrar(@RequestBody AnimalDTO dto) {
-        service.cadastrar(
+        fachada.cadastrarAnimal(
             dto.tutor, dto.nome, dto.especie,
             dto.raca, dto.nascimento, dto.sexo,
             dto.peso, dto.plano, dto.obs
@@ -26,7 +26,7 @@ public class AnimalController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<GenericResponse> deletar(@PathVariable Long id) {
-        service.deletar(id);
+        fachada.deletarAnimal(id);
         return ResponseEntity.ok(new GenericResponse("OK", "Animal removido."));
     }
 }

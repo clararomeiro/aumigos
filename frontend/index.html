@@ -26,10 +26,10 @@
 <nav>
     <button onclick="showTab('home')">Início</button>
     <button onclick="showTab('tutorTab')">Tutor</button>
+    <button onclick="showTab('listaVeterinarios')">Veterinários</button>
+    <button onclick="showTab('listaConsultas')">Consultas</button>
     <button onclick="showTab('realizarPagamento')">Realizar Pagamento</button>
     <button onclick="showTab('agendarConsulta')">Agendar Consulta</button>
-    <button onclick="showTab('cadastrarVeterinario')">Cadastrar Veterinário</button>
-    <button onclick="showTab('cadastrarTutor')">Cadastrar Tutor</button>
 </nav>
 
 <main>
@@ -40,6 +40,36 @@
 
     <section id="tutorTab" class="tab">
         <h2>Tutor</h2>
+
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h2>Gerenciar Tutores</h2>
+            <button onclick="abrirModal('modalCadTutor')" style="background-color: #28a745; margin:0;">
+                + Novo Tutor
+            </button>
+        </div>
+        <hr>
+
+        <div id="modalCadTutor" class="modal-overlay">
+            <div class="modal-content">
+                <span class="close-btn" onclick="fecharModal('modalCadTutor')">&times;</span>
+                <h3>Cadastrar Novo Tutor</h3>
+                
+                <label>Nome:</label>
+                <input type="text" id="tutorNome" style="width: 100%">
+
+                <label>CPF:</label>
+                <input type="text" id="tutorCpf" style="width: 100%">
+
+                <label>Endereço:</label>
+                <input type="text" id="tutorEndereco" style="width: 100%">
+
+                <label>Email:</label>
+                <input type="text" id="tutorEmail" style="width: 100%">
+
+                <button onclick="cadastrarTutor()">Salvar</button>
+                <div id="tutorResultado"></div>
+            </div>
+        </div>
 
         <div class="two-columns">
             <div class="col">
@@ -104,17 +134,89 @@
         </div>
     </section>
 
+    <section id="listaVeterinarios" class="tab">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h2>Veterinários Cadastrados</h2>
+            <button onclick="abrirModal('modalCadVet')" style="background-color: #28a745; margin:0;">
+                + Novo Veterinário
+            </button>
+        </div>
+        
+        <button onclick="carregarVeterinarios()">Atualizar Lista</button>
+        <br><br>
+
+        <div id="modalCadVet" class="modal-overlay">
+            <div class="modal-content">
+                <span class="close-btn" onclick="fecharModal('modalCadVet')">&times;</span>
+                <h3>Cadastrar Veterinário</h3>
+
+                <label>Nome:</label>
+                <input type="text" id="vetNome" style="width: 100%">
+
+                <label>CPF:</label>
+                <input type="text" id="vetCpf" style="width: 100%">
+
+                <label>Email:</label>
+                <input type="text" id="vetEmail" style="width: 100%">
+
+                <button onclick="cadastrarVeterinario()">Salvar</button>
+                <div id="vetResultado"></div>
+            </div>
+        </div>
+
+        <table border="1" cellpadding="10" cellspacing="0" style="width: 100%; text-align: left;">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>CPF</th>
+                    <th>Email</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="tabelaVeterinariosCorpo">
+                </tbody>
+        </table>
+    </section>
+
+    <section id="listaConsultas" class="tab">
+        <h2>Consultas Agendadas</h2>
+        <button onclick="carregarConsultas()">Atualizar Lista</button>
+        <br><br>
+        <table border="1" cellpadding="10" cellspacing="0" style="width: 100%; text-align: left;">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Data</th>
+                    <th>Animal</th>
+                    <th>Veterinário</th>
+                    <th>Pagamento</th>
+                </tr>
+            </thead>
+            <tbody id="tabelaConsultasCorpo">
+                </tbody>
+        </table>
+    </section>
+
     <!-- ================== REALIZAR PAGAMENTO ================== -->
     <section id="realizarPagamento" class="tab">
-        <h2>Realizar Pagamento</h2>
+        <h2>Realizar Pagamento de Consulta</h2>
 
-        <label>Tipo de Pagamento (C/D):</label>
-        <input type="text" id="pagTipo" maxlength="1">
+        <label>Selecione a Consulta Pendente:</label>
+        <select id="pagConsultaSelect" style="width: 300px; padding: 7px; margin-top: 5px;">
+            <option value="">Carregando...</option>
+        </select>
 
-        <label>Valor:</label>
+        <label>Tipo de Pagamento:</label>
+        <select id="pagTipo" style="width: 300px; padding: 7px;">
+            <option value="Credito">Crédito</option>
+            <option value="Debito">Débito</option>
+            <option value="Plano">Plano de Saúde</option>
+        </select>
+
+        <label>Valor (R$):</label>
         <input type="number" id="pagValor" step="0.01">
 
-        <button onclick="realizarPagamento()">Enviar</button>
+        <button onclick="realizarPagamento()" style="background: #28a745;">Confirmar Pagamento</button>
         <div id="pagamentoResultado"></div>
     </section>
 
@@ -122,54 +224,29 @@
     <section id="agendarConsulta" class="tab">
         <h2>Agendar Consulta</h2>
 
-        <label>ID do Animal:</label>
-        <input type="number" id="consAnimal">
+        <label>CPF do Tutor:</label>
+        <div style="display: flex; gap: 10px;">
+            <input type="text" id="consTutorCpf" placeholder="Digite o CPF do tutor">
+            <button onclick="buscarAnimaisDoTutor()" style="margin-top: 5px;">Buscar Animais</button>
+        </div>
+        <div id="msgBuscaTutor" style="font-size: 0.9em; color: gray; margin-bottom: 10px;"></div>
 
-        <label>ID do Veterinário:</label>
-        <input type="text" id="consVet">
+        <label>Selecione o Animal:</label>
+        <select id="consAnimalSelect" disabled style="width: 266px; padding: 7px; margin-top: 5px;">
+            <option value="">Aguardando busca do tutor...</option>
+        </select>
 
-        <label>Data (AAAA-MM-DD):</label>
-        <input type="text" id="consData">
+        <label>Selecione o Veterinário:</label>
+        <select id="consVet" style="width: 266px; padding: 7px; margin-top: 5px;">
+            <option value="">Carregando veterinários...</option>
+        </select>
 
-        <button onclick="agendarConsulta()">Agendar</button>
+        <label>Data:</label>
+        <input type="date" id="consData">
+
+        <br><br>
+        <button onclick="agendarConsulta()" style="width: 266px; background-color: #28a745;">Confirmar Agendamento</button>
         <div id="consultaResultado"></div>
-    </section>
-
-    <!-- ================== CADASTRAR VETERINÁRIO ================== -->
-    <section id="cadastrarVeterinario" class="tab">
-        <h2>Cadastrar Veterinário</h2>
-
-        <label>Nome:</label>
-        <input type="text" id="vetNome">
-
-        <label>CPF:</label>
-        <input type="text" id="vetCpf">
-
-        <label>Email:</label>
-        <input type="text" id="vetEmail">
-
-        <button onclick="cadastrarVeterinario()">Cadastrar</button>
-        <div id="vetResultado"></div>
-    </section>
-
-    <!-- ================== CADASTRAR TUTOR ================== -->
-    <section id="cadastrarTutor" class="tab">
-        <h2>Cadastrar Tutor</h2>
-
-        <label>Nome:</label>
-        <input type="text" id="tutorNome">
-
-        <label>CPF:</label>
-        <input type="text" id="tutorCpf">
-
-        <label>Endereço:</label>
-        <input type="text" id="tutorEndereco">
-
-        <label>Email:</label>
-        <input type="text" id="tutorEmail">
-
-        <button onclick="cadastrarTutor()">Cadastrar</button>
-        <div id="tutorResultado"></div>
     </section>
 
 </main>

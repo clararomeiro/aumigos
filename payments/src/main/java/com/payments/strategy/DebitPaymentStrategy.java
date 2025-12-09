@@ -1,7 +1,9 @@
 package com.payments.strategy;
 
 import com.payments.model.PaymentResponse;
+import org.springframework.stereotype.Component;
 
+@Component("DEBITO")
 public class DebitPaymentStrategy implements PaymentStrategy {
 
     @Override

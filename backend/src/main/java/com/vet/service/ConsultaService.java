@@ -3,6 +3,7 @@ package com.vet.service;
 import com.vet.model.*;
 import com.vet.repository.*;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 public class ConsultaService {
@@ -27,5 +28,9 @@ public class ConsultaService {
         c.setData(data);
 
         return consultaRepo.save(c);
+    }
+
+    public List<Consulta> listarTodas() {
+        return consultaRepo.findAll();
     }
 }

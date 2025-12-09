@@ -1,7 +1,7 @@
 package com.vet.controller;
 
 import com.vet.model.*;
-import com.vet.service.*;
+import com.vet.service.RegistrosFachada;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,15 +9,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/tutores")
 public class TutorController {
 
-    private final TutorService service;
+   private final RegistrosFachada fachada; // Troque Service por Fachada
 
-    public TutorController(TutorService service) {
-        this.service = service;
+    public TutorController(RegistrosFachada fachada) {
+        this.fachada = fachada;
     }
 
     @GetMapping("/{cpf}")
     public ResponseEntity<Tutor> buscar(@PathVariable String cpf) {
-        Tutor tutor = service.buscarPorCpf(cpf);
+        Tutor tutor = fachada.buscarTutor(cpf);
         if (tutor == null) {
             return ResponseEntity.noContent().build();
         }
@@ -26,7 +26,7 @@ public class TutorController {
 
     @PostMapping
     public ResponseEntity<GenericResponse> cadastrar(@RequestBody Tutor t) {
-        service.cadastrar(t);
+        fachada.cadastrarTutor(t);
         return ResponseEntity.ok(new GenericResponse("OK", "Tutor cadastrado com sucesso."));
     }
 }

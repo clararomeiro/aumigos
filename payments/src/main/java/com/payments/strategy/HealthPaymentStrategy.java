@@ -1,7 +1,9 @@
 package com.payments.strategy;
 
 import com.payments.model.PaymentResponse;
+import org.springframework.stereotype.Component;
 
+@Component("PLANO")
 public class HealthPaymentStrategy implements PaymentStrategy {
 
     @Override

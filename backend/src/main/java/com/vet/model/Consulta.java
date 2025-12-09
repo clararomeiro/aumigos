@@ -20,4 +20,8 @@ public class Consulta {
 
     @ManyToOne
     private Veterinario veterinario;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "pagamento_id")
+    private Pagamento pagamento;
 }

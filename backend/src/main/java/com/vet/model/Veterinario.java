@@ -1,5 +1,6 @@
 package com.vet.model;
 
+import java.util.List;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,4 +15,7 @@ public class Veterinario {
 
     private String nome;
     private String email;
+
+    @OneToMany(mappedBy = "veterinario")
+    private List<Consulta> consultas;
 }

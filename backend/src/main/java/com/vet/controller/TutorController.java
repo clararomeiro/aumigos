@@ -15,9 +15,9 @@ public class TutorController {
         this.service = service;
     }
 
-    @GetMapping
-    public ResponseEntity<Tutor> buscar(@RequestParam String nome) {
-        Tutor tutor = service.buscarPorNome(nome);
+    @GetMapping("/{cpf}")
+    public ResponseEntity<Tutor> buscar(@PathVariable String cpf) {
+        Tutor tutor = service.buscarPorCpf(cpf);
         if (tutor == null) {
             return ResponseEntity.noContent().build();
         }

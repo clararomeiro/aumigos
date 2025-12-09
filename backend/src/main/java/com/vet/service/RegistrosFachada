@@ -1,0 +1,49 @@
+package com.vet.service;
+
+import com.vet.model.*;
+import org.springframework.stereotype.Service;
+import java.util.List;
+
+// No Spring, @Service já garante que seja Singleton por padrão
+@Service
+public class RegistrosFachada {
+
+    private final TutorService tutorService;
+    private final AnimalService animalService;
+    private final VeterinarioService vetService;
+    private final ConsultaService consultaService;
+
+    public RegistrosFachada(TutorService t, AnimalService a, VeterinarioService v, ConsultaService c) {
+        this.tutorService = t;
+        this.animalService = a;
+        this.vetService = v;
+        this.consultaService = c;
+    }
+
+    // Métodos centralizados conforme UML
+    public Tutor buscarTutor(String nome) {
+        return tutorService.buscarPorNome(nome);
+    }
+
+    public void cadastrarTutor(Tutor t) {
+        tutorService.cadastrar(t);
+    }
+
+    public void cadastrarVeterinario(Veterinario v) {
+        vetService.cadastrar(v);
+    }
+
+    // Exemplo usando o Builder aqui
+    public void cadastrarAnimal(String tutorCpf, String nome, String especie, String raca) {
+        Tutor t = tutorService.buscarPorNome(tutorCpf); // Ajustar lógica de busca por CPF
+        if (t != null) {
+            Animal a = new AnimalBuilder()
+                        .comNome(nome)
+                        .daEspecie(especie)
+                        .daRaca(raca)
+                        .doTutor(t)
+                        .build();
+            // Salvar via repository (precisaria expor método save no service)
+        }
+    }
+}

@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Hospital Veterinário</title>
+    <title>Aumigos</title>
     <link rel="stylesheet" href="style.css">
     <style>
         .two-columns {
@@ -20,7 +20,7 @@
 <body>
 
 <header>
-    <h1>Hospital Veterinário</h1>
+    <h1>Aumigos</h1>
 </header>
 
 <nav>
@@ -45,8 +45,8 @@
             <div class="col">
                 <h3>Buscar Tutor</h3>
 
-                <label>Nome do tutor:</label>
-                <input type="text" id="buscarTutorNome">
+                <label>CPF do tutor:</label>
+                <input type="text" id="buscarTutorCpf">
                 <button onclick="buscarTutor()">Buscar</button>
 
                 <div id="buscarTutorResultado"></div>
@@ -68,13 +68,34 @@
                 <h3>Cadastrar Animal para este Tutor</h3>
 
                 <label>ID do Tutor (automático):</label>
-                <input type="text" id="aniTutor" readonly>
+                <input type="text" id="aniTutor" readonly style="background:#eee">
 
                 <label>Nome:</label>
                 <input type="text" id="aniNome">
 
                 <label>Espécie:</label>
                 <input type="text" id="aniEspecie">
+
+                <label>Raça:</label>
+                <input type="text" id="aniRaca">
+
+                <label>Data de Nascimento:</label>
+                <input type="date" id="aniNascimento">
+
+                <label>Sexo:</label>
+                <select id="aniSexo" style="width: 266px; padding: 7px; margin-top: 5px;">
+                    <option value="M">Macho</option>
+                    <option value="F">Fêmea</option>
+                </select>
+
+                <label>Peso (kg):</label>
+                <input type="number" step="0.1" id="aniPeso">
+
+                <label>Plano de Saúde (ID opcional):</label>
+                <input type="number" id="aniPlano" placeholder="Deixe vazio se não tiver">
+
+                <label>Observações:</label>
+                <input type="text" id="aniObs">
 
                 <button onclick="cadastrarAnimal()">Cadastrar Animal</button>
                 <div id="aniResultado"></div>

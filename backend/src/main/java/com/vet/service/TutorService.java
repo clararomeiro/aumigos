@@ -14,9 +14,8 @@ public class TutorService {
         this.tutorRepository = tutorRepository;
     }
 
-    public Tutor buscarPorNome(String nome) {
-        List<Tutor> lista = tutorRepository.findByNomeContainingIgnoreCase(nome);
-        return lista.isEmpty() ? null : lista.get(0);
+  public Tutor buscarPorCpf(String cpf) {
+        return tutorRepository.findById(cpf).orElse(null);
     }
 
     public Tutor cadastrar(Tutor t) {

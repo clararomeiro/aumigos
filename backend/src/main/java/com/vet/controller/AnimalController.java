@@ -16,7 +16,11 @@ public class AnimalController {
 
     @PostMapping
     public ResponseEntity<GenericResponse> cadastrar(@RequestBody AnimalDTO dto) {
-        service.cadastrar(dto.tutor, dto.nome, dto.especie);
+        service.cadastrar(
+            dto.tutor, dto.nome, dto.especie,
+            dto.raca, dto.nascimento, dto.sexo,
+            dto.peso, dto.plano, dto.obs
+        );
         return ResponseEntity.ok(new GenericResponse("OK", "Animal cadastrado."));
     }
 
@@ -31,4 +35,10 @@ class AnimalDTO {
     public String tutor;
     public String nome;
     public String especie;
+    public String raca;
+    public String nascimento;
+    public String sexo;
+    public Float peso;
+    public Long plano;
+    public String obs;
 }

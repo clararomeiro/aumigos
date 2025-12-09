@@ -7,7 +7,7 @@ function showTab(id) {
    BUSCAR TUTOR
 ================================ */
 async function buscarTutor() {
-    const nome = document.getElementById("buscarTutorNome").value;
+    const cpf = document.getElementById("buscarTutorCpf").value;
     const div = document.getElementById("buscarTutorResultado");
     const cadAnimal = document.getElementById("cadAnimalContainer");
     const animaisContainer = document.getElementById("animaisContainer");
@@ -18,9 +18,14 @@ async function buscarTutor() {
     animaisContainer.classList.add("hidden");
     listaAnimaisForm.innerHTML = "";
 
+    if (!cpf) {
+        div.innerHTML = "Digite um CPF.";
+        return;
+    }
+
     let resp;
     try {
-        resp = await fetch(`/api/tutores?nome=${nome}`);
+        resp = await fetch(`/api/tutores/${cpf}`);
     } catch (e) {
         div.innerHTML = "Erro de conexão.";
         return;
@@ -76,17 +81,6 @@ function renderizarListaAnimais(tutor) {
         `).join("");
 
     animaisContainer.classList.remove("hidden");
-}
-
-async function deletarAnimaisSelecionados() {
-    const ids = [...document.querySelectorAll(".chkAnimal:checked")].map(c => c.value);
-
-    for (const id of ids) {
-        await fetch(`/api/animais/${id}`, { method: "DELETE" });
-    }
-
-    alert("Animais deletados!");
-    buscarTutor(); // atualiza página
 }
 
 /* ================================
@@ -175,24 +169,38 @@ async function cadastrarAnimal() {
     const tutor = document.getElementById("aniTutor").value;
     const nome = document.getElementById("aniNome").value;
     const especie = document.getElementById("aniEspecie").value;
+    
+    // Novos campos
+    const raca = document.getElementById("aniRaca").value;
+    const nascimento = document.getElementById("aniNascimento").value;
+    const sexo = document.getElementById("aniSexo").value;
+    const peso = document.getElementById("aniPeso").value ? parseFloat(document.getElementById("aniPeso").value) : null;
+    const plano = document.getElementById("aniPlano").value ? parseInt(document.getElementById("aniPlano").value) : null;
+    const obs = document.getElementById("aniObs").value;
+
     const div = document.getElementById("aniResultado");
 
     const resp = await fetch(`/api/animais`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tutor, nome, especie })
+        body: JSON.stringify({ 
+            tutor, nome, especie, 
+            raca, nascimento, sexo, 
+            peso, plano, obs 
+        })
     });
 
     if (!resp.ok) {
         div.innerHTML = "Erro ao cadastrar animal.";
+        div.style.color = "red";
         return;
     }
 
     div.innerHTML = "Animal cadastrado com sucesso!";
+    div.style.color = "green";
 
-    // Buscar tutor atualizado e re-renderizar lista de animais
-    const nomeTutor = document.getElementById("buscarTutorNome").value;
-    const respTutor = await fetch(`/api/tutores?nome=${nomeTutor}`);
+    const cpfTutor = document.getElementById("buscarTutorCpf").value;
+    const respTutor = await fetch(`/api/tutores/${cpfTutor}`);
 
     if (respTutor.ok) {
         const tutorAtualizado = await respTutor.json();

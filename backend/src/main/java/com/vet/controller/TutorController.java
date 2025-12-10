@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/tutores")
 public class TutorController {
 
-   private final RegistrosFachada fachada; // Troque Service por Fachada
+   private final RegistrosFachada fachada;
 
     public TutorController(RegistrosFachada fachada) {
         this.fachada = fachada;

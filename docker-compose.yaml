@@ -4,7 +4,7 @@ services:
     image: traefik:v3.6
     command:
       - --api.insecure=true
-      - --providers.docker=true
+      - --providers.docker=true # Habilita o Docker Provider
       - --entrypoints.web.address=:80
       - --log.level=INFO
     ports:
@@ -43,13 +43,13 @@ services:
       SPRING_DATASOURCE_PASSWORD: vetpass
     labels:
       - "traefik.enable=true"
-
+        # Roteador (Router) para o backend
       - "traefik.http.routers.backend.rule=PathPrefix(`/api`)"
       - "traefik.http.routers.backend.entrypoints=web"
-
+        # Middleware para remover o prefixo /api
       - "traefik.http.middlewares.backend-strip.stripprefix.prefixes=/api"
       - "traefik.http.routers.backend.middlewares=backend-strip"
-
+        # Serviço (Service) para o backend
       - "traefik.http.services.backend.loadbalancer.server.port=8080"
     depends_on:
       postgres:

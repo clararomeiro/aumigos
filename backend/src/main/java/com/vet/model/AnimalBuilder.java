@@ -1,5 +1,6 @@
 package com.vet.model;
 
+// Poderia ser singleton
 public class AnimalBuilder {
     private Animal animal;
 

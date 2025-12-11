@@ -5,6 +5,7 @@ import com.vet.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Value;
 
 @Service
 public class PagamentoService {
@@ -12,6 +13,9 @@ public class PagamentoService {
     private final PagamentoRepository pagamentoRepo;
     private final ConsultaRepository consultaRepo;
     private final RestTemplate restTemplate;
+
+    @Value("${api.payments.gateway.url}")
+    private String gatewayUrl;
 
     public PagamentoService(PagamentoRepository pr, ConsultaRepository cr, RestTemplate rt) {
         this.pagamentoRepo = pr;
@@ -28,7 +32,7 @@ public class PagamentoService {
             throw new RuntimeException("Esta consulta já está paga!");
         }
 
-        String url = "http://payments:8080/pagar";
+        String url = gatewayUrl + "/pagar";
         PagamentoRequest requestExterno = new PagamentoRequest(tipo, valor);
 
         try {
